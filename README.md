@@ -6,6 +6,58 @@ En ouvrant le fichier `ctf_1` avec Ghidra et en cherchant directement le main, c
 CODE: _ _ _ _ _ _ _
 
 ```
+#include <stdio.h>
+
+typedef unsigned char byte;
+
+byte col(byte param_1)
+{
+  int local_c;
+  byte local_5;
+  
+  local_5 = param_1;
+  local_c = 0;
+  while ((local_c < 200 && (local_5 != 1))) {
+    if ((local_5 & 1) == 0) {
+      local_5 = local_5 >> 1;
+    }
+    else {
+      local_5 = local_5 * '\x03' + 1;
+    }
+    local_c = local_c + 1;
+  }
+  return local_5;
+}
+
+int main ()
+{
+    char*  alpha="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int i=0;
+    while(i<62)   
+    {
+      char cVar1;
+      char cVar2;
+      
+      cVar2 = (alpha[i] + '\x01') * '\x1c';
+      cVar1 = col(cVar2);
+      if (cVar1 == '\x01' || cVar2 == '\0') {
+        cVar2 = cVar2 + '\x12';
+      }
+      else {
+        cVar2 = cVar2 + '2';
+      }
+      
+      if (cVar2 == -0x76)  printf("=> %c \n", alpha[i]  );
+        i = i+1;
+    }
+    return 0;
+}
+
+
+
+
+
+
 bool check_char_1(char param_1)
 {
   return (char)(param_1 * '\x0e') == -0x7e;
